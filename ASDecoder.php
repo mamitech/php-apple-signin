@@ -13,6 +13,7 @@ use Exception;
  *
  * @package  AppleSignIn\ASDecoder
  * @author   Griffin Ledingham <gcledingham@gmail.com>
+ * @author   Angga Bayu S <anggabs86@gmail.com>
  * @license  http://opensource.org/licenses/BSD-3-Clause 3-clause BSD
  * @link     https://github.com/GriffinLedingham/php-apple-signin
  */
@@ -23,7 +24,7 @@ class ASDecoder {
      * @param string $identityToken
      * @return object|null
      */
-    public static function getAppleSignInPayload(string $identityToken) : ?object
+    public static function getAppleSignInPayload(string $identityToken) : ?\AppleSignIn\ASPayload
     {
         $identityPayload = self::decodeIdentityToken($identityToken);
         return new ASPayload($identityPayload);
@@ -35,7 +36,7 @@ class ASDecoder {
      * @param string $identityToken
      * @return object
      */
-    public static function decodeIdentityToken(string $identityToken) : object {
+    public static function decodeIdentityToken(string $identityToken) : \stdClass {
         $publicKeyKid = JWT::getPublicKeyKid($identityToken);
 
         $publicKeyData = self::fetchPublicKey($publicKeyKid);
@@ -86,7 +87,7 @@ class ASDecoder {
 class ASPayload {
     protected $_instance;
 
-    public function __construct(?object $instance) {
+    public function __construct(?\stdClass $instance) {
         if(is_null($instance)) {
             throw new Exception('ASPayload received null instance.');
         }
